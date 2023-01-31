@@ -67,7 +67,7 @@ export class MenuItemsService {
                             "createdAt": "2021-04-27T15:35:15.000000Z",
                             "children": []
                         },
-                        {
+                        { 
                             "id": 7,
                             "name": "Navigating the function jungle",
                             "url": "/events/reactcon/workshops/jungle",
