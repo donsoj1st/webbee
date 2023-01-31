@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { MenuItem } from '@prisma/client';
 
 @Injectable()
 export class MenuItemsService {
@@ -23,7 +24,7 @@ export class MenuItemsService {
             "id": 1,
             "name": "All events",
             "url": "/events",
-            "parentId": null,
+            "parentId": null, 
             "createdAt": "2021-04-27T15:35:15.000000Z",
             "children": [
                 {
@@ -80,7 +81,22 @@ export class MenuItemsService {
         }
     ]
   */
-  async getMenuItems() {
-    throw new Error('TODO in task 3');
+  async getMenuItems(): Promise<MenuItem[]> {
+    //throw new Error('TODO in task 3');
+    const items = await this.prisma.menuItem.findMany({});
+    const parent = items.filter((res) => res.parentId === null);
+    const data: any = [];
+    parent.forEach((element) => {
+      let value: any;
+      value.id = element.id;
+      value.name = element.name;
+      value.url = element.url;
+      value.createdAt = element.createdAt;
+      value.children = parent.filter((res) => res.parentId == element.id);
+
+      data.push(value);
+    });
+
+    return data;
   }
 }

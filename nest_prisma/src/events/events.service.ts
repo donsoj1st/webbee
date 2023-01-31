@@ -88,7 +88,19 @@ export class EventsService {
 
   @Get('events')
   async getEventsWithWorkshops() {
-    throw new Error('TODO task 1');
+    const event = await this.prisma.event.findMany();
+    const workshop = await this.prisma.workshop.findMany();
+    const data: any = [];
+    event.forEach((element) => {
+      let value: any;
+      value.id = element.id;
+      value.name = element.name;
+      value.createdAt = element.createdAt;
+      value.workshops = workshop.filter((res) => res.eventId == element.id);
+
+      data.push(value);
+    });
+    return data;
   }
 
   /* TODO: complete getFutureEventWithWorkshops so that it returns events with workshops, that have not yet started
@@ -159,6 +171,24 @@ export class EventsService {
      */
   @Get('futureevents')
   async getFutureEventWithWorkshops() {
-    throw new Error('TODO task 2');
+    const event = await this.prisma.event.findMany();
+    const workshop = await this.prisma.workshop.findMany({
+      where: {
+        start: {
+          gte: new Date('2020-03-19T14:21:00+0200'),
+        },
+      },
+    });
+    const data: any = [];
+    event.forEach((element) => {
+      let value: any;
+      value.id = element.id;
+      value.name = element.name;
+      value.createdAt = element.createdAt;
+      value.workshops = workshop.filter((res) => res.eventId == element.id);
+
+      data.push(value);
+    });
+    return data;
   }
 }
