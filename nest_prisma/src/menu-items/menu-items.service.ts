@@ -107,7 +107,7 @@ export class MenuItemsService {
     } else if (root.children.length == 0) {
       return root;
     } else {
-      const oldRoot = { ...root };
+      const oldRoot = { ...root }; // creating the old root
       const childrens: any = [];
       root.children.forEach((element: any, index: number) => {
         childrens.push(this.binary(value, element));
