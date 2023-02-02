@@ -7,5 +7,5 @@ export class children {
   url: string;
 
   parentId: number;
-  childrens: children[];
+  children: children[];
 }
