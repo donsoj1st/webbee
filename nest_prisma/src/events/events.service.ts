@@ -1,12 +1,13 @@
 import { Get, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { value } from './dto/create-event.dto';
 
 @Injectable()
 export class EventsService {
   constructor(private prisma: PrismaService) {}
 
-  getWarmupEvents() {
-    return this.prisma.event.findMany();
+  async getWarmupEvents() {
+    return await this.prisma.event.findMany();
   }
 
   /* TODO: complete getEventsWithWorkshops so that it returns all events including the workshops
@@ -90,15 +91,16 @@ export class EventsService {
   async getEventsWithWorkshops() {
     const event = await this.prisma.event.findMany();
     const workshop = await this.prisma.workshop.findMany();
-    const data: any = [];
-    event.forEach((element) => {
-      let value: any;
-      value.id = element.id;
-      value.name = element.name;
-      value.createdAt = element.createdAt;
-      value.workshops = workshop.filter((res) => res.eventId == element.id);
+    let data: any = [];
 
-      data.push(value);
+    event.forEach((element) => {
+      let values: value = { id: 0, name: '', createdAt: '', workshops: [] };
+      console.log(element);
+      values.id = element.id;
+      values.name = element.name;
+      values.createdAt = element.createdAt;
+      values.workshops = workshop.filter((res) => res.eventId == element.id);
+      data.push(values);
     });
     return data;
   }
@@ -181,13 +183,13 @@ export class EventsService {
     });
     const data: any = [];
     event.forEach((element) => {
-      let value: any;
-      value.id = element.id;
-      value.name = element.name;
-      value.createdAt = element.createdAt;
-      value.workshops = workshop.filter((res) => res.eventId == element.id);
-
-      data.push(value);
+      let values: value = { id: 0, name: '', createdAt: '', workshops: [] };
+      console.log(values);
+      values.id = element.id;
+      values.name = element.name;
+      values.createdAt = element.createdAt;
+      values.workshops = workshop.filter((res) => res.eventId == element.id);
+      data.push(values);
     });
     return data;
   }

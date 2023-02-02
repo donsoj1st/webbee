@@ -1,9 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { MenuItem } from '@prisma/client';
+import { children } from './dto/create-menu-item.dto';
 
 @Injectable()
 export class MenuItemsService {
+  data: children;
   // noinspection JSUnusedLocalSymbols
   constructor(private prisma: PrismaService) {}
 
@@ -81,22 +83,99 @@ export class MenuItemsService {
         }
     ]
   */
-  async getMenuItems(): Promise<MenuItem[]> {
+  async getMenuItems(): Promise<any> {
     //throw new Error('TODO in task 3');
     const items = await this.prisma.menuItem.findMany({});
     const parent = items.filter((res) => res.parentId === null);
-    const data: any = [];
-    parent.forEach((element) => {
-      let value: any;
-      value.id = element.id;
-      value.name = element.name;
-      value.url = element.url;
-      value.createdAt = element.createdAt;
-      value.children = parent.filter((res) => res.parentId == element.id);
-
-      data.push(value);
-    });
+    let data: any = [
+      {
+        id: 1,
+        name: 'All events',
+        url: '/events',
+        parentId: null,
+        createdAt: '2021-04-27T15:35:15.000000Z',
+        children: [
+          {
+            id: 2,
+            name: 'Laracon',
+            url: '/events/laracon',
+            parentId: 1,
+            createdAt: '2021-04-27T15:35:15.000000Z',
+            children: [
+              {
+                id: 3,
+                name: 'Illuminate your knowledge of the laravel code base',
+                url: '/events/laracon/workshops/illuminate',
+                parentId: 2,
+                createdAt: '2021-04-27T15:35:15.000000Z',
+                children: [],
+              },
+              {
+                id: 4,
+                name: 'The new Eloquent - load more with less',
+                url: '/events/laracon/workshops/eloquent',
+                parentId: 2,
+                createdAt: '2021-04-27T15:35:15.000000Z',
+                children: [],
+              },
+            ],
+          },
+          {
+            id: 5,
+            name: 'Reactcon',
+            url: '/events/reactcon',
+            parentId: 1,
+            createdAt: '2021-04-27T15:35:15.000000Z',
+            children: [
+              {
+                id: 6,
+                name: '#NoClass pure functional programming',
+                url: '/events/reactcon/workshops/noclass',
+                parentId: 5,
+                createdAt: '2021-04-27T15:35:15.000000Z',
+                children: [],
+              },
+              {
+                id: 7,
+                name: 'Navigating the function jungle',
+                url: '/events/reactcon/workshops/jungle',
+                parentId: 5,
+                createdAt: '2021-04-27T15:35:15.000000Z',
+                children: [],
+              },
+            ],
+          },
+        ],
+      },
+    ];
+    // items.forEach((element, index) => {
+    //   //console.log({ ...element, childrens: [] });
+    //   data = this.binary({ ...element, childrens: [] }, data);
+    //   //console.log(this.data, index);
+    // });
 
     return data;
+  }
+  binary(value: any, root: any) {
+    console.log('root.id', root);
+    if (value.parentId == null) {
+      root = value;
+      return value;
+    }
+    console.log('root.id', root.id);
+    if (root.id == value.parentId) {
+      root.childrens.push(value);
+      return root;
+    } else {
+      if (root.childrens.length == 0) {
+        return;
+      } else {
+        root.childrens.forEach((element: any, index: number) => {
+          const result = this.binary(value, element);
+          root.childrens[index] = this.binary(value, element);
+          return root;
+        });
+      }
+    }
   }
 }

@@ -11,34 +11,35 @@ import { Migration } from '../cli/migration';
 
 const prisma = new PrismaService();
 
-export default class implements Migration {
+export default class database implements Migration {
   async up() {
     try {
-      await prisma.$queryRaw`CREATE TABLE "events" (
-                                                     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-                                                     "name" TEXT NOT NULL,
-                                                     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
-                           )`;
+      console.log('I AM HERE');
+      // await prisma.$queryRaw`CREATE TABLE "events" (
+      //                                                "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+      //                                                "name" TEXT NOT NULL,
+      //                                                "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+      //                      )`;
 
-      await prisma.$queryRaw`CREATE TABLE "menu_items" (
-                                                         "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-                                                         "name" TEXT NOT NULL,
-                                                         "url" TEXT NOT NULL,
-                                                         "parentId" INTEGER,
-                                                         "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                                                         CONSTRAINT "menu_items_parentId_fkey" FOREIGN KEY ("parentId") REFERENCES "menu_items" ("id") ON DELETE CASCADE ON UPDATE NO ACTION
-                           )`;
+      // await prisma.$queryRaw`CREATE TABLE "menu_items" (
+      //                                                    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+      //                                                    "name" TEXT NOT NULL,
+      //                                                    "url" TEXT NOT NULL,
+      //                                                    "parentId" INTEGER,
+      //                                                    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      //                                                    CONSTRAINT "menu_items_parentId_fkey" FOREIGN KEY ("parentId") REFERENCES "menu_items" ("id") ON DELETE CASCADE ON UPDATE NO ACTION
+      //                      )`;
 
-      await prisma.$queryRaw`CREATE TABLE "workshops"
-                     (
-                         "id"        INTEGER  NOT NULL PRIMARY KEY AUTOINCREMENT,
-                         "name"      TEXT     NOT NULL,
-                         "eventId"   INTEGER  NOT NULL,
-                         "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                         "start"     DATETIME NOT NULL,
-                         "end"       DATETIME NOT NULL,
-                         CONSTRAINT "workshops_eventId_fkey" FOREIGN KEY ("eventId") REFERENCES "events" ("id") ON DELETE CASCADE ON UPDATE NO ACTION
-                     )`;
+      // await prisma.$queryRaw`CREATE TABLE "workshops"
+      //                (
+      //                    "id"        INTEGER  NOT NULL PRIMARY KEY AUTOINCREMENT,
+      //                    "name"      TEXT     NOT NULL,
+      //                    "eventId"   INTEGER  NOT NULL,
+      //                    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      //                    "start"     DATETIME NOT NULL,
+      //                    "end"       DATETIME NOT NULL,
+      //                    CONSTRAINT "workshops_eventId_fkey" FOREIGN KEY ("eventId") REFERENCES "events" ("id") ON DELETE CASCADE ON UPDATE NO ACTION
+      //                )`;
 
       const menuItems = [
         {
@@ -171,6 +172,7 @@ export default class implements Migration {
         ...CreateEvents,
         ...CreateWorkShops,
       ]);
+      console.log('I am done');
       // automatic rollback on error
     } catch (e) {
       console.error(e);
@@ -185,3 +187,6 @@ export default class implements Migration {
     await prisma.$queryRaw`DROP TABLE "workshops"`;
   }
 }
+
+const ade = new database();
+ade.up();

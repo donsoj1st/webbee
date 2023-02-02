@@ -90,5 +90,9 @@
   "bugs": {
     "url": "https://github.com/webbeetechnologies/node_test_new/issues"
   },
-  "homepage": "https://github.com/webbeetechnologies/node_test_new#readme"
+  "homepage": "https://github.com/webbeetechnologies/node_test_new#readme",
+
+  "prisma": {
+    "seed": "ts-node prisma/migrations/1661860035294-DbSetUp.ts"
+  }
 }
